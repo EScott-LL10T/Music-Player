@@ -1,5 +1,6 @@
 import javax.sound.sampled.*;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class MusicPlayer {
@@ -13,13 +14,18 @@ public class MusicPlayer {
         File file = new File(filePath);
         try(AudioInputStream audioStream = AudioSystem.getAudioInputStream(file)){
             Clip clip = AudioSystem.getClip();
+            clip.open(audioStream);
+        }
+        catch(FileNotFoundException e){
+            IO.println("Couldn't locate file.");
         }
         catch(IOException e){
             IO.println("something went wrong.");
         }
         catch (UnsupportedAudioFileException e) {
             IO.println("audio file is not supported. Please use .wav, .au or .aiff");
-        } catch (LineUnavailableException e) {
+        }
+        catch (LineUnavailableException e) {
             IO.println("unable to access audio resource.");
         }
     }
