@@ -15,6 +15,7 @@ public class MusicPlayer {
         try(AudioInputStream audioStream = AudioSystem.getAudioInputStream(file)){
             Clip clip = AudioSystem.getClip();
             clip.open(audioStream);
+            clip.start();
 
             IO.println("no problems detected.");
         }
@@ -29,6 +30,9 @@ public class MusicPlayer {
         }
         catch (LineUnavailableException e) {
             IO.println("unable to access audio resource.");
+        }
+        finally{
+            IO.println("bye");
         }
     }
 }
