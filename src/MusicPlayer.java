@@ -20,9 +20,16 @@ public class MusicPlayer {
             clip.open(audioStream);
 
             String response = "";
-            while(!response.equals("Q")){
+            while(!response.equals("Q")) {
                 IO.println(MESSAGE);
                 response = s.nextLine().toUpperCase();
+                switch(response){
+                    case "P" -> clip.start();
+                    case "S" -> clip.stop();
+                    case "R" -> clip.setMicrosecondPosition(0);
+                    case "Q" -> clip.close();
+                    default -> IO.println("Invalid choice.");
+                }
             }
 
         }
