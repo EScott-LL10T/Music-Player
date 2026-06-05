@@ -10,11 +10,13 @@ public class MusicPlayer {
     }
 
     public static void musicPlayer(){
-        String filePath = "Covenant Dance.wav";
+        String filePath = "src\\Covenant Dance.wav";
         File file = new File(filePath);
         try(AudioInputStream audioStream = AudioSystem.getAudioInputStream(file)){
             Clip clip = AudioSystem.getClip();
             clip.open(audioStream);
+
+            IO.println("no problems detected.");
         }
         catch(FileNotFoundException e){
             IO.println("Couldn't locate file.");
