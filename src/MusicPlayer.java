@@ -1,6 +1,4 @@
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
 
@@ -14,11 +12,15 @@ public class MusicPlayer {
         String filePath = "Covenant Dance.wav";
         File file = new File(filePath);
         try(AudioInputStream audioStream = AudioSystem.getAudioInputStream(file)){
-
-        }catch(IOException e){
+            Clip clip = AudioSystem.getClip();
+        }
+        catch(IOException e){
             IO.println("something went wrong.");
-        } catch (UnsupportedAudioFileException e) {
+        }
+        catch (UnsupportedAudioFileException e) {
             IO.println("audio file is not supported. Please use .wav, .au or .aiff");
+        } catch (LineUnavailableException e) {
+            IO.println("unable to access audio resource.");
         }
     }
 }
