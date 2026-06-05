@@ -2,6 +2,7 @@ import javax.sound.sampled.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Scanner;
 
 public class MusicPlayer {
 
@@ -10,14 +11,20 @@ public class MusicPlayer {
     }
 
     public static void musicPlayer(){
-        String filePath = "src\\Covenant Dance.wav";
+        final String filePath = "src\\Covenant Dance.wav";
         File file = new File(filePath);
-        try(AudioInputStream audioStream = AudioSystem.getAudioInputStream(file)){
+        final String MESSAGE = "P = Play \nS = stop \nR = reset \nQ = quit \nEnter your choice: ";
+        try(Scanner s = new Scanner(System.in);
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(file)){
             Clip clip = AudioSystem.getClip();
             clip.open(audioStream);
-            clip.start();
 
-            IO.println("no problems detected.");
+            String response = "";
+            while(!response.equals("Q")){
+                IO.println(MESSAGE);
+                response = s.nextLine().toUpperCase();
+            }
+
         }
         catch(FileNotFoundException e){
             IO.println("Couldn't locate file.");
@@ -35,4 +42,7 @@ public class MusicPlayer {
             IO.println("bye");
         }
     }
+
+
+
 }
