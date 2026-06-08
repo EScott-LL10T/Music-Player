@@ -5,21 +5,39 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class MusicPlayer {
+    private static int currentSong;
 
     static void main(String[] args){
         musicPlayer();
     }
 
     public static void musicPlayer(){
-        final String filePath = "src\\Covenant Dance.wav";
-        File file = new File(filePath);
-        final String MESSAGE = "P = Play \nS = stop \nR = reset \nQ = quit \nEnter your choice: ";
+        File folder = new File("src\\music");
+        File[] listOfFiles = folder.listFiles();
+        if(listOfFiles != null){
+            currentSong = 0;
+            for(int i = 0; i < listOfFiles.length; i++){
+                File f = listOfFiles[i];
+                if(f.isFile()){
+                    boolean exit = playSong(f);
+                    if(exit){
+                        IO.println("Bye");
+                        break;
+                    }
+                }
+            }
+        }else{
+            IO.println("no files found");
+        }
+    }
+
+    public static boolean playSong(File file){
+        final String MESSAGE = "P = Play \nS = stop \nR = reset \nN = next \nP = prev \nQ = quit \nEnter your choice: ";
+        String response = "";
         try(Scanner s = new Scanner(System.in);
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(file)){
             Clip clip = AudioSystem.getClip();
             clip.open(audioStream);
-
-            String response = "";
             while(!response.equals("Q")) {
                 IO.println(MESSAGE);
                 response = s.nextLine().toUpperCase();
@@ -27,7 +45,9 @@ public class MusicPlayer {
                     case "P" -> clip.start();
                     case "S" -> clip.stop();
                     case "R" -> clip.setMicrosecondPosition(0);
-                    case "Q" -> clip.close();
+                    case "Q" -> {
+                        clip.close();
+                    }
                     default -> IO.println("Invalid choice.");
                 }
             }
@@ -45,11 +65,8 @@ public class MusicPlayer {
         catch (LineUnavailableException e) {
             IO.println("unable to access audio resource.");
         }
-        finally{
-            IO.println("bye");
-        }
+        return response.equals("Q");
     }
-
-
-
 }
+
+
