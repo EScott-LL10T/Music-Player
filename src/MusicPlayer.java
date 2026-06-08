@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 public class MusicPlayer {
     private static int currentSong;
+    private static final Scanner s = new Scanner(System.in);
 
     static void main(String[] args){
         musicPlayer();
@@ -16,38 +17,56 @@ public class MusicPlayer {
         File[] listOfFiles = folder.listFiles();
         if(listOfFiles != null){
             currentSong = 0;
-            for(int i = 0; i < listOfFiles.length; i++){
-                File f = listOfFiles[i];
+            while(listOfFiles[currentSong] != null){
+                File f = listOfFiles[currentSong];
                 if(f.isFile()){
                     boolean exit = playSong(f);
+                    if(currentSong == listOfFiles.length){
+                        IO.println("End of song list.");
+                        currentSong = listOfFiles.length - 1;
+                    }
+
+                    if(currentSong < 0){
+                        IO.println("Start of track list.");
+                        currentSong = 0;
+                    }
                     if(exit){
-                        IO.println("Bye");
+                        IO.println("Bye.");
                         break;
                     }
+                }else{
+                    IO.println("not a file");
+                    return;
                 }
             }
         }else{
-            IO.println("no files found");
+            IO.println("no files found.");
         }
     }
 
     public static boolean playSong(File file){
-        final String MESSAGE = "P = Play \nS = stop \nR = reset \nN = next \nP = prev \nQ = quit \nEnter your choice: ";
+        final String MESSAGE = """
+                S = Start\s
+                P = Pause\s
+                R = Reset\s
+                B = Back\s
+                N = Next\s
+                Q = Quit\s
+                Enter your choice:\s""";
         String response = "";
-        try(Scanner s = new Scanner(System.in);
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(file)){
+        try(AudioInputStream audioStream = AudioSystem.getAudioInputStream(file)){
             Clip clip = AudioSystem.getClip();
             clip.open(audioStream);
-            while(!response.equals("Q")) {
+            while(!response.equals("Q") && !response.equals("N") && !response.equals("B")) {
                 IO.println(MESSAGE);
                 response = s.nextLine().toUpperCase();
                 switch(response){
-                    case "P" -> clip.start();
-                    case "S" -> clip.stop();
+                    case "S" -> clip.start();
+                    case "P" -> clip.stop();
                     case "R" -> clip.setMicrosecondPosition(0);
-                    case "Q" -> {
-                        clip.close();
-                    }
+                    case "Q" -> clip.close();
+                    case "B" -> currentSong--;
+                    case "N" -> currentSong++;
                     default -> IO.println("Invalid choice.");
                 }
             }
